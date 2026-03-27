@@ -1,0 +1,20 @@
+{
+  "name": "angle-prompt",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.2",
+    "jsdom": "^29.0.1",
+    "three": "^0.183.2",
+    "vitest": "^4.1.2"
+  }
+}
