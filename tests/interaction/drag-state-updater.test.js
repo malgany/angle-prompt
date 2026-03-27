@@ -4,28 +4,6 @@ import { AppConfig } from "../../src/config/app-config.js";
 import { DragStateUpdater } from "../../src/interaction/drag-state-updater.js";
 
 describe("DragStateUpdater", () => {
-    it("updates distance from pointer delta", () => {
-        const cameraState = { setPartial: vi.fn() };
-        const updater = new DragStateUpdater({
-            config: AppConfig,
-            camera: {},
-            cameraState
-        });
-
-        updater.update(
-            {
-                type: "distance",
-                startPointer: { y: 0.5 },
-                startDistanceFactor: 1
-            },
-            { y: 0.2 }
-        );
-
-        expect(cameraState.setPartial).toHaveBeenCalledWith({
-            distanceFactor: 1.45
-        });
-    });
-
     it("updates azimuth from plane intersection", () => {
         const cameraState = { setPartial: vi.fn() };
         const updater = new DragStateUpdater({

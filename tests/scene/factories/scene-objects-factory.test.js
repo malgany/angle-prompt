@@ -16,10 +16,10 @@ describe("createSceneObjects", () => {
 
         const sceneObjects = createSceneObjects(AppConfig);
 
-        expect(sceneObjects.nodes).toHaveLength(8);
+        expect(sceneObjects.nodes).toHaveLength(7);
         expect(sceneObjects.azimuthHandle.userData.type).toBe("azimuth");
         expect(sceneObjects.elevationHandle.userData.type).toBe("elevation");
-        expect(sceneObjects.distanceHandle.userData.type).toBe("distance");
+        expect(sceneObjects.distanceLineGeometry).toBeDefined();
         expect(sceneObjects.cameraGroup.children.length).toBe(2);
     });
 });

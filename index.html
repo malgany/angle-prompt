@@ -4,18 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de Angulos 3D</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2312151b'/%3E%3Ccircle cx='18' cy='45' r='8' fill='%2300ffd5'/%3E%3Ccircle cx='32' cy='22' r='8' fill='%23ff88df'/%3E%3Cpath d='M16 45c10-10 22-14 34-16' stroke='%23ffb300' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="./assets/styles/app.css">
 </head>
 <body>
     <div id="camera-control-wrapper">
-        <div id="prompt-overlay" title="Clique para copiar">
-            <div class="toast" id="toast">Copiado!</div>
-            <span id="prompt-text">Carregando...</span>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
+        <div id="scene-ui-layer">
+            <div id="distance-controls" role="group" aria-label="Proximidade da camera">
+                <button class="distance-button" data-distance-factor="1.4" type="button">wide</button>
+                <button class="distance-button" data-distance-factor="1.0" type="button">medium</button>
+                <button class="distance-button" data-distance-factor="0.6" type="button">close-up</button>
+            </div>
+
+            <button id="prompt-toggle-button" type="button" aria-controls="prompt-overlay" aria-expanded="false">
+                prompt
+            </button>
+
+            <div id="prompt-overlay">
+                <button id="prompt-copy-button" type="button" title="Clique para copiar">
+                    <div class="toast" id="toast">Copiado!</div>
+                    <span id="prompt-text">Carregando...</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+
+                <label class="prompt-detail-toggle" for="prompt-detail-toggle">
+                    <input id="prompt-detail-toggle" type="checkbox" checked>
+                    <span>detail</span>
+                </label>
+            </div>
         </div>
     </div>
 

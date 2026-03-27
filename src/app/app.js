@@ -1,5 +1,6 @@
 import { SnapAnimator } from "../animation/snap-animator.js";
 import { buildPrompt } from "../prompt/build-prompt.js";
+import { applyResponsiveCamera } from "../scene/responsive-camera.js";
 import { createSceneRuntime } from "../scene/scene-bootstrap.js";
 import { HandleVisualController } from "../scene/handle-visual-controller.js";
 import { SceneController } from "../scene/scene-controller.js";
@@ -9,12 +10,14 @@ import { DragStateUpdater } from "../interaction/drag-state-updater.js";
 import { HoverController } from "../interaction/hover-controller.js";
 import { InteractionController } from "../interaction/interaction-controller.js";
 import { PointerTracker } from "../interaction/pointer-tracker.js";
+import { DistanceControlsController } from "../ui/distance-controls-controller.js";
 import { OverlayController } from "../ui/overlay-controller.js";
 import { ToastController } from "../ui/toast-controller.js";
 
 export class App {
     constructor(config) {
         this.config = config;
+        this.renderAppState = this.renderAppState.bind(this);
         this.handleResize = this.handleResize.bind(this);
         this.animate = this.animate.bind(this);
     }
@@ -29,10 +32,14 @@ export class App {
         const sceneRuntime = createSceneRuntime({
             config: this.config,
             wrapperElement: dom.wrapperElement,
-            overlayElement: dom.overlayElement
+            overlayElement: dom.sceneUiLayerElement
         });
         const sceneController = this.createSceneController(sceneRuntime.sceneObjects);
         const overlayController = this.createOverlayController(dom);
+        const distanceControlsController = this.createDistanceControlsController({
+            cameraState,
+            dom
+        });
         const interactionController = this.createInteractionController({
             cameraState,
             sceneController,
@@ -43,9 +50,13 @@ export class App {
         this.sceneRuntime = sceneRuntime;
         this.sceneController = sceneController;
         this.overlayController = overlayController;
+        this.distanceControlsController = distanceControlsController;
         this.interactionController = interactionController;
 
         this.overlayController.attachCopy();
+        this.overlayController.attachPanelToggle();
+        this.overlayController.attachDetailToggle(this.renderAppState);
+        this.distanceControlsController.attach();
         this.interactionController.attach();
         this.renderAppState();
         window.addEventListener("resize", this.handleResize);
@@ -55,17 +66,21 @@ export class App {
     getDomElements() {
         return {
             wrapperElement: document.getElementById("camera-control-wrapper"),
-            overlayElement: document.getElementById("prompt-overlay"),
+            sceneUiLayerElement: document.getElementById("scene-ui-layer"),
+            promptOverlayElement: document.getElementById("prompt-overlay"),
+            promptToggleButtonElement: document.getElementById("prompt-toggle-button"),
+            copyButtonElement: document.getElementById("prompt-copy-button"),
+            detailToggleElement: document.getElementById("prompt-detail-toggle"),
             promptTextElement: document.getElementById("prompt-text"),
-            toastElement: document.getElementById("toast")
+            toastElement: document.getElementById("toast"),
+            distanceButtonElements: Array.from(document.querySelectorAll("[data-distance-factor]"))
         };
     }
 
     createSceneController(sceneObjects) {
         const handleVisualController = new HandleVisualController({
             azimuth: sceneObjects.azimuthHandle,
-            elevation: sceneObjects.elevationHandle,
-            distance: sceneObjects.distanceHandle
+            elevation: sceneObjects.elevationHandle
         });
 
         return new SceneController({
@@ -77,10 +92,23 @@ export class App {
 
     createOverlayController(dom) {
         return new OverlayController({
-            overlayElement: dom.overlayElement,
+            panelElement: dom.promptOverlayElement,
+            toggleButtonElement: dom.promptToggleButtonElement,
+            copyButtonElement: dom.copyButtonElement,
+            detailToggleElement: dom.detailToggleElement,
             textElement: dom.promptTextElement,
             clipboardService: new ClipboardService(),
             toastController: new ToastController(dom.toastElement)
+        });
+    }
+
+    createDistanceControlsController({ cameraState, dom }) {
+        return new DistanceControlsController({
+            buttonElements: dom.distanceButtonElements,
+            onSelectDistance: (distanceFactor) => {
+                cameraState.setPartial({ distanceFactor });
+                this.renderAppState();
+            }
         });
     }
 
@@ -117,12 +145,21 @@ export class App {
     }
 
     renderAppState() {
+        const snappedState = this.cameraState.getSnapped();
+        const prompt = buildPrompt(this.config, snappedState, {
+            detailed: this.overlayController.isDetailedEnabled()
+        });
+
         this.sceneController.render(this.cameraState);
-        this.overlayController.setPrompt(buildPrompt(this.config, this.cameraState.getSnapped()));
+        this.distanceControlsController.setActiveDistance(snappedState.distanceFactor);
+        this.overlayController.setPrompt(prompt);
     }
 
     handleResize() {
-        this.sceneRuntime.camera.aspect = window.innerWidth / window.innerHeight;
+        const aspectRatio = window.innerWidth / window.innerHeight;
+
+        this.sceneRuntime.camera.aspect = aspectRatio;
+        applyResponsiveCamera(this.sceneRuntime.camera, aspectRatio);
         this.sceneRuntime.camera.updateProjectionMatrix();
         this.sceneRuntime.renderer.setSize(window.innerWidth, window.innerHeight);
     }

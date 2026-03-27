@@ -1,4 +1,5 @@
 import { THREE } from "../vendor/three-context.js";
+import { applyResponsiveCamera } from "./responsive-camera.js";
 import { createSceneObjects } from "./factories/scene-objects-factory.js";
 
 export function createSceneRuntime({ config, wrapperElement, overlayElement }) {
@@ -26,8 +27,7 @@ function createScene() {
 
 function createCamera() {
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(4.5, 3, 4.5);
-    camera.lookAt(0, 0.75, 0);
+    applyResponsiveCamera(camera, window.innerWidth / window.innerHeight);
     return camera;
 }
 

@@ -25,7 +25,6 @@ describe("SceneController", () => {
             },
             azimuthHandle: { position: createPositionRecorder() },
             elevationHandle: { position: createPositionRecorder() },
-            distanceHandle: { position: createPositionRecorder() },
             distanceLineGeometry: { setFromPoints: vi.fn() }
         };
         const handleVisualController = {

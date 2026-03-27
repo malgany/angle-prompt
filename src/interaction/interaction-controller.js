@@ -89,8 +89,7 @@ export class InteractionController {
     startDrag(type, pointer) {
         this.dragSession = {
             type,
-            startPointer: pointer.clone(),
-            startDistanceFactor: this.cameraState.getRaw().distanceFactor
+            startPointer: pointer.clone()
         };
 
         this.hoverController.clear();

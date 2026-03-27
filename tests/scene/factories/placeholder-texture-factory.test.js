@@ -10,6 +10,9 @@ describe("createPlaceholderTexture", () => {
             strokeStyle: "",
             lineWidth: 0,
             fillRect: vi.fn(),
+            clearRect: vi.fn(),
+            drawImage: vi.fn(),
+            strokeRect: vi.fn(),
             beginPath: vi.fn(),
             arc: vi.fn(),
             fill: vi.fn(),
@@ -21,6 +24,13 @@ describe("createPlaceholderTexture", () => {
             getContext: vi.fn(() => context)
         };
         const createElementSpy = vi.spyOn(document, "createElement").mockReturnValue(canvas);
+        const originalImage = globalThis.Image;
+        const imageConstructor = vi.fn(function MockImage() {
+            this.onload = null;
+            this.onerror = null;
+            this.src = "";
+        });
+        globalThis.Image = imageConstructor;
 
         const texture = createPlaceholderTexture();
 
@@ -28,7 +38,9 @@ describe("createPlaceholderTexture", () => {
         expect(canvas.width).toBe(256);
         expect(canvas.height).toBe(256);
         expect(canvas.getContext).toHaveBeenCalledWith("2d");
+        expect(imageConstructor).toHaveBeenCalled();
 
         createElementSpy.mockRestore();
+        globalThis.Image = originalImage;
     });
 });

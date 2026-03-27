@@ -16,4 +16,16 @@ describe("buildPrompt", () => {
         expect(prompt).toContain("wide shot");
         expect(prompt).toContain("Maintain consistency.");
     });
+
+    it("builds the simplified prompt when detail mode is disabled", () => {
+        const prompt = buildPrompt(AppConfig, {
+            azimuth: 90,
+            elevation: 30,
+            distanceKey: "1.0"
+        }, {
+            detailed: false
+        });
+
+        expect(prompt).toBe("right side view elevated shot medium shot");
+    });
 });

@@ -10,11 +10,6 @@ export class DragStateUpdater {
     }
 
     update(dragSession, pointer) {
-        if (dragSession.type === "distance") {
-            this.updateDistance(dragSession, pointer);
-            return;
-        }
-
         this.raycaster.setFromCamera(pointer, this.camera);
 
         if (dragSession.type === "azimuth") {
@@ -55,14 +50,6 @@ export class DragStateUpdater {
 
         this.cameraState.setPartial({
             elevation: THREE.MathUtils.radToDeg(Math.atan2(relativeY, relativeZ))
-        });
-    }
-
-    updateDistance(dragSession, pointer) {
-        const deltaY = pointer.y - dragSession.startPointer.y;
-
-        this.cameraState.setPartial({
-            distanceFactor: dragSession.startDistanceFactor - deltaY * 1.5
         });
     }
 }

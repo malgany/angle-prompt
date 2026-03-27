@@ -75,9 +75,8 @@ describe("InteractionController", () => {
     it("updates state while dragging and snaps on release", () => {
         const { controller, canvas } = createController();
         controller.dragSession = {
-            type: "distance",
-            startPointer: { y: 0 },
-            startDistanceFactor: 1
+            type: "azimuth",
+            startPointer: { y: 0 }
         };
 
         const event = { preventDefault: vi.fn() };
@@ -86,7 +85,7 @@ describe("InteractionController", () => {
 
         expect(controller.dragStateUpdater.update).toHaveBeenCalled();
         expect(controller.onStateChange).toHaveBeenCalled();
-        expect(controller.sceneController.deactivateHandle).toHaveBeenCalledWith("distance");
+        expect(controller.sceneController.deactivateHandle).toHaveBeenCalledWith("azimuth");
         expect(controller.snapAnimator.start).toHaveBeenCalled();
         expect(controller.dragSession).toBeNull();
         expect(canvas.style.cursor).toBe("default");

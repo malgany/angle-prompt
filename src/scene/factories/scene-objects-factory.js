@@ -10,7 +10,6 @@ export function createSceneObjects(config) {
     const elevationHandle = createHandle(0xff69b4, "elevation");
     const distanceLineGeometry = new THREE.BufferGeometry();
     const distanceLine = createDistanceLine(distanceLineGeometry);
-    const distanceHandle = createHandle(0xffa500, "distance");
 
     return {
         nodes: [
@@ -20,13 +19,11 @@ export function createSceneObjects(config) {
             azimuthHandle,
             elevationArc,
             elevationHandle,
-            distanceLine,
-            distanceHandle
+            distanceLine
         ],
         cameraGroup,
         azimuthHandle,
         elevationHandle,
-        distanceHandle,
         distanceLineGeometry
     };
 }

@@ -72,14 +72,6 @@ export class SceneController {
     }
 
     renderDistanceControls(pose) {
-        const handleDistance = pose.distance - this.config.distanceHandleOffset;
-
-        this.sceneObjects.distanceHandle.position.set(
-            handleDistance * Math.sin(pose.azimuthRadians) * Math.cos(pose.elevationRadians),
-            handleDistance * Math.sin(pose.elevationRadians) + this.config.center.y,
-            handleDistance * Math.cos(pose.azimuthRadians) * Math.cos(pose.elevationRadians)
-        );
-
         this.sceneObjects.distanceLineGeometry.setFromPoints([
             pose.cameraPosition.clone(),
             this.config.center.clone()
