@@ -5,9 +5,9 @@ export function createSceneObjects(config) {
     const targetPlane = createTargetPlane(config);
     const cameraGroup = createCameraGroup();
     const azimuthRing = createAzimuthRing(config);
-    const azimuthHandle = createHandle(0x00ff88, "azimuth");
+    const azimuthHandle = createHandle(0x2f8cff, "azimuth");
     const elevationArc = createElevationArc(config);
-    const elevationHandle = createHandle(0xff69b4, "elevation");
+    const elevationHandle = createHandle(0xff4d4d, "elevation");
     const distanceLineGeometry = new THREE.BufferGeometry();
     const distanceLine = createDistanceLine(distanceLineGeometry);
 
@@ -64,8 +64,8 @@ function createAzimuthRing(config) {
     const ring = new THREE.Mesh(
         new THREE.TorusGeometry(config.azimuthRadius, 0.04, 16, 64),
         new THREE.MeshStandardMaterial({
-            color: 0x00ff88,
-            emissive: 0x00ff88,
+            color: 0x2f8cff,
+            emissive: 0x2f8cff,
             emissiveIntensity: 0.3
         })
     );
@@ -92,8 +92,8 @@ function createElevationArc(config) {
     return new THREE.Mesh(
         new THREE.TubeGeometry(curve, 32, 0.04, 8, false),
         new THREE.MeshStandardMaterial({
-            color: 0xff69b4,
-            emissive: 0xff69b4,
+            color: 0xff4d4d,
+            emissive: 0xff4d4d,
             emissiveIntensity: 0.3
         })
     );

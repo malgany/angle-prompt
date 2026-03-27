@@ -19,6 +19,8 @@ describe("createSceneObjects", () => {
         expect(sceneObjects.nodes).toHaveLength(7);
         expect(sceneObjects.azimuthHandle.userData.type).toBe("azimuth");
         expect(sceneObjects.elevationHandle.userData.type).toBe("elevation");
+        expect(sceneObjects.azimuthHandle.material.color.getHex()).toBe(0x2f8cff);
+        expect(sceneObjects.elevationHandle.material.color.getHex()).toBe(0xff4d4d);
         expect(sceneObjects.distanceLineGeometry).toBeDefined();
         expect(sceneObjects.cameraGroup.children.length).toBe(2);
     });

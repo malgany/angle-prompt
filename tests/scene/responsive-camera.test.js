@@ -25,8 +25,8 @@ describe("applyResponsiveCamera", () => {
 
         applyResponsiveCamera(camera, 0.46);
 
-        expect(camera.fov).toBe(70);
-        expect(camera.position.set).toHaveBeenCalledWith(6.4, 4.2, 6.4);
+        expect(camera.fov).toBe(78);
+        expect(camera.position.set).toHaveBeenCalledWith(7.8, 4.8, 7.8);
         expect(camera.lookAt).toHaveBeenCalledWith(0, 0.75, 0);
     });
 });
