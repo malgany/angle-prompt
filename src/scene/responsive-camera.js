@@ -11,19 +11,19 @@ export function applyResponsiveCamera(camera, aspectRatio) {
 function getCameraProfile(aspectRatio) {
     if (aspectRatio <= 0.5) {
         return {
-            fov: 78,
-            x: 7.8,
-            y: 4.8,
-            z: 7.8
+            fov: 86,
+            x: 9.4,
+            y: 5.8,
+            z: 9.4
         };
     }
 
     if (aspectRatio <= 0.75) {
         return {
-            fov: 62,
-            x: 5.5,
-            y: 3.6,
-            z: 5.5
+            fov: 68,
+            x: 6.8,
+            y: 4.2,
+            z: 6.8
         };
     }
 
