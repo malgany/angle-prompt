@@ -1,4 +1,5 @@
 import { THREE } from "../vendor/three-context.js";
+import { getDistanceFactorFromSliderX } from "../scene/distance-slider-math.js";
 
 export class DragStateUpdater {
     constructor({ config, camera, cameraState }) {
@@ -10,6 +11,11 @@ export class DragStateUpdater {
     }
 
     update(dragSession, pointer) {
+        if (dragSession.type === "distance") {
+            this.updateDistance(pointer);
+            return;
+        }
+
         this.raycaster.setFromCamera(pointer, this.camera);
 
         if (dragSession.type === "azimuth") {
@@ -50,6 +56,23 @@ export class DragStateUpdater {
 
         this.cameraState.setPartial({
             elevation: THREE.MathUtils.radToDeg(Math.atan2(relativeY, relativeZ))
+        });
+    }
+
+    updateDistance(pointer) {
+        this.raycaster.setFromCamera(pointer, this.camera);
+
+        const plane = new THREE.Plane().setFromNormalAndCoplanarPoint(
+            new THREE.Vector3(0, 0, 1),
+            new THREE.Vector3(0, 0, this.config.distanceSlider.z)
+        );
+
+        if (!this.raycaster.ray.intersectPlane(plane, this.intersection)) {
+            return;
+        }
+
+        this.cameraState.setPartial({
+            distanceFactor: getDistanceFactorFromSliderX(this.config, this.intersection.x)
         });
     }
 }

@@ -1,13 +1,19 @@
 import { THREE } from "../../vendor/three-context.js";
+import { getDistanceSliderSnapPositions } from "../distance-slider-math.js";
 import { createPlaceholderTexture } from "./placeholder-texture-factory.js";
 
 export function createSceneObjects(config) {
     const targetPlane = createTargetPlane(config);
     const cameraGroup = createCameraGroup();
     const azimuthRing = createAzimuthRing(config);
+    const azimuthSnapMarkers = createAzimuthSnapMarkers(config);
     const azimuthHandle = createHandle(0x2f8cff, "azimuth");
     const elevationArc = createElevationArc(config);
+    const elevationSnapMarkers = createElevationSnapMarkers(config);
     const elevationHandle = createHandle(0xff4d4d, "elevation");
+    const distanceSliderRail = createDistanceSliderRail(config);
+    const distanceSnapMarkers = createDistanceSnapMarkers(config);
+    const distanceHandle = createHandle(0xffeb2f, "distance");
     const distanceLineGeometry = new THREE.BufferGeometry();
     const distanceLine = createDistanceLine(distanceLineGeometry);
 
@@ -16,14 +22,24 @@ export function createSceneObjects(config) {
             targetPlane,
             cameraGroup,
             azimuthRing,
+            azimuthSnapMarkers,
             azimuthHandle,
             elevationArc,
+            elevationSnapMarkers,
             elevationHandle,
+            distanceSliderRail,
+            distanceSnapMarkers,
+            distanceHandle,
             distanceLine
         ],
         cameraGroup,
+        azimuthSnapMarkers,
         azimuthHandle,
+        elevationSnapMarkers,
         elevationHandle,
+        distanceSliderRail,
+        distanceSnapMarkers,
+        distanceHandle,
         distanceLineGeometry
     };
 }
@@ -74,6 +90,21 @@ function createAzimuthRing(config) {
     return ring;
 }
 
+function createAzimuthSnapMarkers(config) {
+    return createSnapMarkerGroup(
+        0x2f8cff,
+        config.snapSteps.azimuth.map((azimuth) => {
+            const radians = THREE.MathUtils.degToRad(azimuth);
+
+            return new THREE.Vector3(
+                config.azimuthRadius * Math.sin(radians),
+                config.azimuthPlaneY,
+                config.azimuthRadius * Math.cos(radians)
+            );
+        })
+    );
+}
+
 function createElevationArc(config) {
     const points = [];
 
@@ -99,6 +130,49 @@ function createElevationArc(config) {
     );
 }
 
+function createElevationSnapMarkers(config) {
+    return createSnapMarkerGroup(
+        0xff4d4d,
+        config.snapSteps.elevation.map((elevation) => {
+            const radians = THREE.MathUtils.degToRad(elevation);
+
+            return new THREE.Vector3(
+                config.elevationPlaneX,
+                config.elevationRadius * Math.sin(radians) + config.center.y,
+                config.elevationRadius * Math.cos(radians)
+            );
+        })
+    );
+}
+
+function createDistanceSliderRail(config) {
+    const {
+        distanceSlider: { xMin, xMax, y, z }
+    } = config;
+    const rail = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.04, 0.04, xMax - xMin, 24),
+        new THREE.MeshStandardMaterial({
+            color: 0xffd400,
+            emissive: 0xffd400,
+            emissiveIntensity: 0.4
+        })
+    );
+    rail.rotation.z = Math.PI / 2;
+    rail.position.set((xMin + xMax) / 2, y, z);
+    return rail;
+}
+
+function createDistanceSnapMarkers(config) {
+    const {
+        distanceSlider: { y, z }
+    } = config;
+
+    return createSnapMarkerGroup(
+        0xffd400,
+        getDistanceSliderSnapPositions(config).map(({ x }) => new THREE.Vector3(x, y, z))
+    );
+}
+
 function createDistanceLine(distanceLineGeometry) {
     return new THREE.Line(
         distanceLineGeometry,
@@ -117,4 +191,23 @@ function createHandle(color, type) {
     );
     handle.userData.type = type;
     return handle;
+}
+
+function createSnapMarkerGroup(color, positions) {
+    const group = new THREE.Group();
+
+    positions.forEach((position) => {
+        const marker = new THREE.Mesh(
+            new THREE.SphereGeometry(0.075, 12, 12),
+            new THREE.MeshStandardMaterial({
+                color,
+                emissive: color,
+                emissiveIntensity: 0.45
+            })
+        );
+        marker.position.copy(position);
+        group.add(marker);
+    });
+
+    return group;
 }

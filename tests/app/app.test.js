@@ -6,12 +6,10 @@ const renderSpy = vi.fn();
 const attachCopy = vi.fn();
 const attachPanelToggle = vi.fn();
 const attachDetailToggle = vi.fn();
-const attachDistanceControls = vi.fn();
 const attachInteraction = vi.fn();
 const sceneRender = vi.fn();
 const overlaySetPrompt = vi.fn();
 const overlayIsDetailedEnabled = vi.fn(() => true);
-const setActiveDistance = vi.fn();
 const cameraUpdateProjectionMatrix = vi.fn();
 const rendererSetSize = vi.fn();
 
@@ -63,12 +61,6 @@ vi.mock("../../src/ui/overlay-controller.js", () => ({
         this.setPrompt = overlaySetPrompt;
     })
 }));
-vi.mock("../../src/ui/distance-controls-controller.js", () => ({
-    DistanceControlsController: vi.fn(function MockDistanceControlsController() {
-        this.attach = attachDistanceControls;
-        this.setActiveDistance = setActiveDistance;
-    })
-}));
 vi.mock("../../src/ui/toast-controller.js", () => ({
     ToastController: vi.fn(function MockToastController() {})
 }));
@@ -86,9 +78,6 @@ describe("App", () => {
             <input id="prompt-detail-toggle" type="checkbox" checked />
             <span id="prompt-text"></span>
             <div id="toast"></div>
-            <button data-distance-factor="1.4"></button>
-            <button data-distance-factor="1.0"></button>
-            <button data-distance-factor="0.6"></button>
         `;
         window.requestAnimationFrame = vi.fn();
         createSceneRuntime.mockReturnValue({
@@ -106,7 +95,8 @@ describe("App", () => {
             },
             sceneObjects: {
                 azimuthHandle: {},
-                elevationHandle: {}
+                elevationHandle: {},
+                distanceHandle: {}
             }
         });
     });
@@ -121,10 +111,8 @@ describe("App", () => {
         expect(attachCopy).toHaveBeenCalled();
         expect(attachPanelToggle).toHaveBeenCalled();
         expect(attachDetailToggle).toHaveBeenCalled();
-        expect(attachDistanceControls).toHaveBeenCalled();
         expect(attachInteraction).toHaveBeenCalled();
         expect(sceneRender).toHaveBeenCalled();
-        expect(setActiveDistance).toHaveBeenCalledWith(1);
         expect(overlaySetPrompt).toHaveBeenCalledWith("prompt");
     });
 

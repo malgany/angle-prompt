@@ -8,6 +8,12 @@ export const AppConfig = Object.freeze({
     elevationPlaneX: -0.8,
     azimuthPlaneY: 0.05,
     distanceHandleOffset: 0.5,
+    distanceSlider: Object.freeze({
+        y: 3,
+        z: 0,
+        xMin: -1.35,
+        xMax: 1.35
+    }),
     snapDurationMs: 250,
     snapSteps: Object.freeze({
         azimuth: Object.freeze([0, 45, 90, 135, 180, 225, 270, 315]),

@@ -20,19 +20,6 @@ body {
     pointer-events: none;
 }
 
-#distance-controls {
-    position: absolute;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    width: min(100vw - 32px, 420px);
-    pointer-events: auto;
-}
-
 #prompt-toggle-button {
     display: none;
     position: absolute;
@@ -56,33 +43,6 @@ body {
 #prompt-toggle-button:hover {
     transform: translateY(-1px);
     border-color: rgba(120, 160, 255, 0.45);
-}
-
-.distance-button {
-    min-width: 120px;
-    padding: 10px 16px;
-    border: 1px solid rgba(0, 255, 136, 0.3);
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #00ff88;
-    cursor: pointer;
-    font: inherit;
-    letter-spacing: 0.08em;
-    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-    backdrop-filter: blur(10px);
-}
-
-.distance-button:hover {
-    transform: translateY(-1px);
-    border-color: #00ff88;
-    background: rgba(0, 0, 0, 0.9);
-}
-
-.distance-button.is-active {
-    background: rgba(0, 0, 0, 0.95);
-    border-color: #00ff88;
-    color: #00ff88;
-    box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.14), 0 0 22px rgba(0, 255, 136, 0.08);
 }
 
 #prompt-overlay {
@@ -182,15 +142,6 @@ svg {
 }
 
 @media (max-width: 720px) {
-    #distance-controls {
-        top: 16px;
-        width: min(100vw - 24px, 360px);
-    }
-
-    .distance-button {
-        min-width: calc(50% - 8px);
-    }
-
     #prompt-toggle-button {
         display: inline-flex;
         position: fixed;
@@ -234,10 +185,6 @@ svg {
 }
 
 @media (max-width: 520px) {
-    .distance-button {
-        min-width: 100%;
-    }
-
     #prompt-overlay {
         max-height: min(46vh, 280px);
     }

@@ -47,4 +47,26 @@ describe("DragStateUpdater", () => {
         updater.update({ type: "elevation" }, { x: 0, y: 0 });
         expect(cameraState.setPartial).toHaveBeenCalledWith({ elevation: 45 });
     });
+
+    it("updates distance from the yellow slider intersection", () => {
+        const cameraState = { setPartial: vi.fn() };
+        const updater = new DragStateUpdater({
+            config: AppConfig,
+            camera: {},
+            cameraState
+        });
+
+        updater.raycaster = {
+            setFromCamera: vi.fn(),
+            ray: {
+                intersectPlane: vi.fn((_, intersection) => {
+                    intersection.set(AppConfig.distanceSlider.xMin, AppConfig.distanceSlider.y, AppConfig.distanceSlider.z);
+                    return intersection;
+                })
+            }
+        };
+
+        updater.update({ type: "distance" }, { x: 0, y: 0 });
+        expect(cameraState.setPartial).toHaveBeenCalledWith({ distanceFactor: 1.4 });
+    });
 });

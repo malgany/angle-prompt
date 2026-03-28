@@ -1,4 +1,5 @@
 import { THREE } from "../vendor/three-context.js";
+import { getDistanceSliderX } from "./distance-slider-math.js";
 
 export class SceneController {
     constructor({ config, sceneObjects, handleVisualController }) {
@@ -40,6 +41,7 @@ export class SceneController {
 
         return {
             distance,
+            distanceFactor: rawState.distanceFactor,
             azimuthRadians,
             elevationRadians,
             cameraPosition: new THREE.Vector3(
@@ -72,6 +74,14 @@ export class SceneController {
     }
 
     renderDistanceControls(pose) {
+        const sliderX = getDistanceSliderX(this.config, pose.distanceFactor);
+
+        this.sceneObjects.distanceHandle.position.set(
+            sliderX,
+            this.config.distanceSlider.y,
+            this.config.distanceSlider.z
+        );
+
         this.sceneObjects.distanceLineGeometry.setFromPoints([
             pose.cameraPosition.clone(),
             this.config.center.clone()

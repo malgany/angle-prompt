@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { AppConfig } from "../../src/config/app-config.js";
+import { getDistanceSliderX } from "../../src/scene/distance-slider-math.js";
 import { SceneController } from "../../src/scene/scene-controller.js";
 
 function createPositionRecorder() {
@@ -25,6 +26,7 @@ describe("SceneController", () => {
             },
             azimuthHandle: { position: createPositionRecorder() },
             elevationHandle: { position: createPositionRecorder() },
+            distanceHandle: { position: createPositionRecorder() },
             distanceLineGeometry: { setFromPoints: vi.fn() }
         };
         const handleVisualController = {
@@ -50,6 +52,11 @@ describe("SceneController", () => {
             AppConfig.elevationPlaneX,
             AppConfig.center.y,
             AppConfig.elevationRadius
+        ]);
+        expect(sceneObjects.distanceHandle.position.values).toEqual([
+            getDistanceSliderX(AppConfig, 1),
+            AppConfig.distanceSlider.y,
+            AppConfig.distanceSlider.z
         ]);
         expect(sceneObjects.distanceLineGeometry.setFromPoints).toHaveBeenCalledTimes(1);
     });

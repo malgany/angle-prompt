@@ -10,7 +10,6 @@ import { DragStateUpdater } from "../interaction/drag-state-updater.js";
 import { HoverController } from "../interaction/hover-controller.js";
 import { InteractionController } from "../interaction/interaction-controller.js";
 import { PointerTracker } from "../interaction/pointer-tracker.js";
-import { DistanceControlsController } from "../ui/distance-controls-controller.js";
 import { OverlayController } from "../ui/overlay-controller.js";
 import { ToastController } from "../ui/toast-controller.js";
 
@@ -36,10 +35,6 @@ export class App {
         });
         const sceneController = this.createSceneController(sceneRuntime.sceneObjects);
         const overlayController = this.createOverlayController(dom);
-        const distanceControlsController = this.createDistanceControlsController({
-            cameraState,
-            dom
-        });
         const interactionController = this.createInteractionController({
             cameraState,
             sceneController,
@@ -50,13 +45,11 @@ export class App {
         this.sceneRuntime = sceneRuntime;
         this.sceneController = sceneController;
         this.overlayController = overlayController;
-        this.distanceControlsController = distanceControlsController;
         this.interactionController = interactionController;
 
         this.overlayController.attachCopy();
         this.overlayController.attachPanelToggle();
         this.overlayController.attachDetailToggle(this.renderAppState);
-        this.distanceControlsController.attach();
         this.interactionController.attach();
         this.renderAppState();
         window.addEventListener("resize", this.handleResize);
@@ -72,15 +65,15 @@ export class App {
             copyButtonElement: document.getElementById("prompt-copy-button"),
             detailToggleElement: document.getElementById("prompt-detail-toggle"),
             promptTextElement: document.getElementById("prompt-text"),
-            toastElement: document.getElementById("toast"),
-            distanceButtonElements: Array.from(document.querySelectorAll("[data-distance-factor]"))
+            toastElement: document.getElementById("toast")
         };
     }
 
     createSceneController(sceneObjects) {
         const handleVisualController = new HandleVisualController({
             azimuth: sceneObjects.azimuthHandle,
-            elevation: sceneObjects.elevationHandle
+            elevation: sceneObjects.elevationHandle,
+            distance: sceneObjects.distanceHandle
         });
 
         return new SceneController({
@@ -99,16 +92,6 @@ export class App {
             textElement: dom.promptTextElement,
             clipboardService: new ClipboardService(),
             toastController: new ToastController(dom.toastElement)
-        });
-    }
-
-    createDistanceControlsController({ cameraState, dom }) {
-        return new DistanceControlsController({
-            buttonElements: dom.distanceButtonElements,
-            onSelectDistance: (distanceFactor) => {
-                cameraState.setPartial({ distanceFactor });
-                this.renderAppState();
-            }
         });
     }
 
@@ -151,7 +134,6 @@ export class App {
         });
 
         this.sceneController.render(this.cameraState);
-        this.distanceControlsController.setActiveDistance(snappedState.distanceFactor);
         this.overlayController.setPrompt(prompt);
     }
 
